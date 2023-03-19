@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <!-- Load the Telegram Library -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<style>
+    .wq-popup{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        display: none;
+    }
+
+    .wq-popup.opened{
+        display: flex;
+    }
+
+    .wq-popup img{
+        width: 100%;
+    }
+
+    .wq-form__banner{
+        margin-bottom: 40px;
+    }
+
+    .wq-form__block{
+        overflow-y: auto;
+        margin: 10px;
+        background: black;
+        color: white;
+        flex-basis: 600px;
+        border-radius: 10px;
+        max-height: calc(100vh - 20px);
+    }
+
+    .wq-form__block__container{
+        padding: 10px 10px 0 10px;
+    }
+
+    .wq-form__block__title, .wq-form__title, .wq-form__submit, .wq-form__choose-block__item__button{
+        background: #872D1B;
+        border-radius: 10px;
+    }
+
+    .wq-form__block__title{
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+    .wq-form{
+        padding: 20px;
+        background: #A6A6A6;
+        border-radius: 10px;
+    }
+
+    .wq-popup input, .wq-popup textarea, .wq-popup select, .wq-form__checkbox-container{
+        border-radius: 10px;
+        background: rgba(213, 213, 213, 0.6);
+        color: black;
+    }
+
+    .wq-popup option{
+        color: black;
+    }
+
+    .wq-popup option:checked{
+        color: black;
+    }
+
+    .wq-popup input::placeholder, .wq-popup select::placeholder, .wq-popup textarea::placeholder{
+        color: black;
+    }
+
+    .wq-form__item{
+        padding: 5px;
+        margin-bottom: 10px;
+        border: none;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .wq-form__checkbox-container__title{
+        position: relative;
+    }
+
+    .wq-form__checkbox-container__title::after{
+        content: "^";
+        position: absolute;
+        right: 0;
+        top: 50%;
+        height: 10px;
+        font-weight: bold;
+        transform: rotate(180deg) translateY(30%);
+        font-size: 18px;
+    }
+
+    .wq-form__checkboxes{
+        padding: 10px;
+        display: none;
+    }
+
+    .wq-form__checkbox{
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .wq-form__checkbox label{
+        width: 50%;
+    }
+
+    .wq-form__submit{
+        color:white;
+        padding: 15px 0;
+        width: 120px;
+        border-radius: 10px;
+        margin: auto;
+        display: block;
+    }
+
+    .wq-form__info{
+        margin: 20px 0;
+        font-size: 13px;
+    }
+
+    .wq-form__footer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #A6A6A6;
+        color: black;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 18px;
+    }
+
+    .wq-form__footer a{
+        color: black;
+    }
+
+    .wq-form__footer img{
+        width: 40px;
+    }
+
+    .wq-form__messanger{
+        display: flex;
+        align-items: center;
+    }
+
+    .wq-form__choose-block{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 10px;
+        grid-row-gap: 20px;
+    }
+
+    .wq-form__choose-block__item{
+        cursor: pointer;
+    }
+
+    .wq-form__choose-block__item__img{
+        background: #A6A6A6;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wq-form__choose-block__item__img img{
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+    }
+
+    .wq-form__choose-block__item__button{
+        padding: 7px 15px;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .wq-form__item__file{
+        padding: 30px;
+        border: 1px solid;
+        display: flex;
+        width: 80px;
+        justify-content: center;
+        border-radius: 10px;
+        background: rgba(213, 213, 213, 0.6);
+    }
+
+</style>
+
+<!--ГЛАВНАЯ-->
+<div class="wq-popup opened">
+    <div class="wq-form__block">
+        <div class="wq-form__block__container">
+            <div class="wq-form__banner">
+                <img src="/static/img/banner.jpg" alt="">
+                Здравствуйте! Рады видеть в чат-боте нашей компании!<br><br>
+                У нас вы всегда можете приобрести стекло для вашего автомобиля и воспользоваться услугами нашего автосервиса.
+            </div>
+            <div class="wq-form__block__title">
+                Выберите интересующую Вас услугу
+            </div>
+            <div class="wq-form__choose-block">
+                <div class="wq-form__choose-block__item">
+                    <div class="wq-form__choose-block__item__img">
+                        <img src="/static/img/1.png" alt="">
+                    </div>
+                    <div class="wq-form__choose-block__item__button">
+                        Замена автостекла
+                    </div>
+                </div>
+                <div class="wq-form__choose-block__item">
+                    <div class="wq-form__choose-block__item__img">
+                        <img src="/static/img/2.png" alt="">
+                    </div>
+                    <div class="wq-form__choose-block__item__button">
+                        Ремонт сколов и трещин
+                    </div>
+                </div>
+                <div class="wq-form__choose-block__item">
+                    <div class="wq-form__choose-block__item__img">
+                        <img src="/static/img/3.png" alt="">
+                    </div>
+                    <div class="wq-form__choose-block__item__button">
+                        Тонирование стекол
+                    </div>
+                </div>
+                <div class="wq-form__choose-block__item">
+                    <div class="wq-form__choose-block__item__img">
+                        <img src="/static/img/4.png" alt="">
+                    </div>
+                    <div class="wq-form__choose-block__item__button">
+                        Купить стекло
+                    </div>
+                </div>
+            </div>
+            <div class="wq-form__info">Не нашли информацию? Остались вопросы? Свяжитесь с нами</div>
+        </div>
+        <div class="wq-form__footer">
+            <div class="wq-form__phone">+7(953)465-53-63</div>
+            <a data-href="+79534655363" onclick="event.preventDefault(); location.href = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'whatsapp://send?phone=' : 'https://web.whatsapp.com/send/?phone=') + this.getAttribute('data-href').replace(/\D/g, '')" class="wq-form__messanger"><img src="/static/img/icon.png" alt="">WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<!--ЗАМЕНА СТЕКЛА-->
+<div class="wq-popup" data-wq-opened="0">
+    <div class="wq-form__block">
+        <div class="wq-form__block__container">
+            <div class="wq-form__banner">
+                <img src="/static/img/banner.jpg" alt="">
+                Замена стекла на легковых и грузовых автомобилях.<br>Цена от 2500р.
+            </div>
+            <div class="wq-form__block__title">
+                Заполните форму записи
+            </div>
+            <form method="post" action="{% url 'auto_glass:glass_rplc' %}" class="wq-form">
+                {% csrf_token %}
+                <div class="wq-form__title wq-form__item">Марка автомобиля:</div>
+<!--                <input type="text" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ glass_replace_form.car_brand }}
+                <div class="wq-form__title wq-form__item">Тип кузова:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Седан">Седан</option>-->
+<!--                    <option value="Хэтчбэк">Хэтчбэк</option>-->
+<!--                    <option value="Универсал">Универсал</option>-->
+<!--                </select>-->
+                    {{ glass_replace_form.car_body_type }}
+                <div class="wq-form__title wq-form__item">Год выпуска:</div>
+<!--                <input type="text" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ glass_replace_form.issue_year }}
+                <div class="wq-form__title wq-form__item">Выбор стекла:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Лобовое">Лобовое</option>-->
+<!--                    <option value="Боковое">Боковое</option>-->
+<!--                    <option value="Заднее">Заднее</option>-->
+<!--                </select>-->
+                    {{ glass_replace_form.glass_type }}
+                <div class="wq-form__title wq-form__item">Комплектация стекла:</div>
+
+                <div class="wq-form__item wq-form__checkbox-container">
+                    <div class="wq-form__checkbox-container__title">Ответ:</div>
+                    <div class="wq-form__checkboxes">
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-1">полный обогрев</label>
+<!--                            <input type="checkbox" id="ch-1-1" value="полный обогрев">-->
+                            {{ glass_replace_form.full_glass_heating }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-2">обогрев зоны дворников</label>
+<!--                            <input type="checkbox" id="ch-1-2" value="обогрев зоны дворников">-->
+                            {{ glass_replace_form.wiper_heating }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-3">датчик дождя</label>
+<!--                            <input type="checkbox" id="ch-1-3" value="датчик дождя">-->
+                            {{ glass_replace_form.rain_sensor }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-4">камера ассистент</label>
+<!--                            <input type="checkbox" id="ch-1-4" value="камера ассистент">-->
+                            {{ glass_replace_form.camera_assistant }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-5">окошко под vin</label>
+<!--                            <input type="checkbox" id="ch-1-5" value="окошко под vin">-->
+                            {{ glass_replace_form.vin_code_windows }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-6">проекция</label>
+<!--                            <input type="checkbox" id="ch-1-6" value="проекция">-->
+                            {{ glass_replace_form.projection }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-1-7">не знаю</label>
+<!--                            <input type="checkbox" id="ch-1-7" value="не знаю">-->
+                            {{ glass_replace_form.i_dont_know }}
+                        </div>
+                    </div>
+                </div>
+                <div class="wq-form__title wq-form__item">Выберите удобное время и дату:</div>
+<!--                <input type="datetime-local" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ glass_replace_form.convenient_datetime }}
+                <div class="wq-form__title wq-form__item">Ваши контактные данные:</div>
+<!--                <textarea type="datetime-local" class="wq-form__input wq-form__item" placeholder="имя и номер телефона"></textarea>-->
+                    {{ glass_replace_form.contacts }}
+                <div style="text-align:center;">
+                    <button type="submit" class="wq-form__item wq-form__submit">Записаться</button>
+                </div>
+            </form>
+            <div class="wq-form__info">Не нашли информацию? Остались вопросы? Свяжитесь с нами</div>
+        </div>
+        <div class="wq-form__footer">
+            <div class="wq-form__phone">+7(953)465-53-63</div>
+            <a data-href="+79534655363" onclick="event.preventDefault(); location.href = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'whatsapp://send?phone=' : 'https://web.whatsapp.com/send/?phone=') + this.getAttribute('data-href').replace(/\D/g, '')" class="wq-form__messanger"><img src="/static/img/icon.png" alt="">WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<!--РЕМОНТ СКОЛА-->
+<div class="wq-popup" data-wq-opened="1">
+    <div class="wq-form__block">
+        <div class="wq-form__block__container">
+            <div class="wq-form__banner">
+                <img src="/static/img/banner.jpg" alt="">
+                ВАЖНО! Чтобы ремонт скола был возможен, он должен быть сухим. Для этого заклейте его скотчем для предотвращения попадания в него влаги.
+                <br>
+                ✅ Ремонт скола 300р/мм
+                <br>
+                ✅ Остановка трещины 500р
+                <br>
+                ✅ Заполнение трещины 45 р/см
+            </div>
+            <div class="wq-form__block__title">
+                Заполните форму записи
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'auto_glass:chips_repair' %}" class="wq-form">
+                {% csrf_token %}
+                <div class="wq-form__title wq-form__item">Марка автомобиля:</div>
+<!--                <input type="text" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ chips_repair_form.car_brand }}
+                <div class="wq-form__title wq-form__item">Выбор стекла:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Лобовое">Лобовое</option>-->
+<!--                    <option value="Боковое">Боковое</option>-->
+<!--                    <option value="Заднее">Заднее</option>-->
+<!--                </select>-->
+                    {{ chips_repair_form.glass_type }}
+                <div class="wq-form__title wq-form__item">Выберите удобное время и дату:</div>
+<!--                <input type="datetime-local" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ chips_repair_form.convenient_datetime }}
+                <div class="wq-form__title wq-form__item">Ваши контактные данные:</div>
+<!--                <textarea type="datetime-local" class="wq-form__input wq-form__item" placeholder="имя и номер телефона"></textarea>-->
+                    {{ chips_repair_form.contacts }}
+                <div class="wq-form__title wq-form__item">Загрузить фото скола:</div>
+<!--                <label class="wq-form__item wq-form__item__file" for="file-2">-->
+<!--                    +-->
+<!--                    <input type="file" style="display: none" id="file-2">-->
+<!--                </label>-->
+                    {{ photo_chips_repair_form.photo }}
+                <button type="submit" class="wq-form__item wq-form__submit">Записаться</button>
+            </form>
+            <div class="wq-form__info">Не нашли информацию? Остались вопросы? Свяжитесь с нами</div>
+        </div>
+        <div class="wq-form__footer">
+            <div class="wq-form__phone">+7(953)465-53-63</div>
+            <a data-href="+79534655363" onclick="event.preventDefault(); location.href = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'whatsapp://send?phone=' : 'https://web.whatsapp.com/send/?phone=') + this.getAttribute('data-href').replace(/\D/g, '')" class="wq-form__messanger"><img src="/static/img/icon.png" alt="">WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<!--ТОНИРОВАНИЕ-->
+<div class="wq-popup" data-wq-opened="2">
+    <div class="wq-form__block">
+        <div class="wq-form__block__container">
+            <div class="wq-form__banner">
+                <img src="/static/img/banner.jpg" alt="">
+                Качественное тонирование вашего автомобиля от 2600р
+            </div>
+            <div class="wq-form__block__title">
+                Заполните форму записи
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'auto_glass:tinting' %}" class="wq-form">
+                {% csrf_token %}
+                <div class="wq-form__title wq-form__item">Марка автомобиля:</div>
+<!--                <input type="text" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ glass_tinting_form.car_brand }}
+                <div class="wq-form__title wq-form__item">Выбор стекла:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Лобовое">Лобовое</option>-->
+<!--                    <option value="Боковое">Боковое</option>-->
+<!--                    <option value="Заднее">Заднее</option>-->
+<!--                </select>-->
+                    {{ glass_tinting_form.glass_type }}
+                <div class="wq-form__title wq-form__item">Выберите удобное время и дату:</div>
+<!--                <input type="datetime-local" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ glass_tinting_form.convenient_datetime }}
+                <div class="wq-form__title wq-form__item">Ваши контактные данные:</div>
+<!--                <textarea type="datetime-local" class="wq-form__input wq-form__item" placeholder="имя и номер телефона"></textarea>-->
+                    {{ glass_tinting_form.contacts }}
+                <div class="wq-form__title wq-form__item">Наличие старой пленки:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Да">Да</option>-->
+<!--                    <option value="Нет">Нет</option>-->
+<!--                </select>-->
+                    {{ glass_tinting_form.old_film }}
+                <div class="wq-form__title wq-form__item">Загрузить фото:</div>
+<!--                <label class="wq-form__item wq-form__item__file" for="file-1">-->
+<!--                    +-->
+<!--                    <input type="file" style="display: none" id="file-1">-->
+<!--                </label>-->
+                    {{ photo_glass_tinting_form.photo }}
+                <button type="submit" class="wq-form__item wq-form__submit">Записаться</button>
+            </form>
+            <div class="wq-form__info">Не нашли информацию? Остались вопросы? Свяжитесь с нами</div>
+        </div>
+        <div class="wq-form__footer">
+            <div class="wq-form__phone">+7(953)465-53-63</div>
+            <a data-href="+79534655363" onclick="event.preventDefault(); location.href = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'whatsapp://send?phone=' : 'https://web.whatsapp.com/send/?phone=') + this.getAttribute('data-href').replace(/\D/g, '')" class="wq-form__messanger"><img src="/static/img/icon.png" alt="">WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<!--КУПИТЬ СТЕКЛО-->
+<div class="wq-popup" data-wq-opened="3">
+    <div class="wq-form__block">
+        <div class="wq-form__block__container">
+            <div class="wq-form__banner">
+                <img src="/static/img/banner.jpg" alt="">
+                Замена стекла на легковых и грузовых автомобилях.<br>Цена от 2500р.
+            </div>
+            <div class="wq-form__block__title">
+                Заполните форму записи
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'auto_glass:buy_glass' %}" class="wq-form">
+                {% csrf_token %}
+                <div class="wq-form__title wq-form__item">Марка автомобиля:</div>
+<!--                    <input type="text" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ buy_glass_form.car_brand }}
+                <div class="wq-form__title wq-form__item">Тип кузова:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Седан">Седан</option>-->
+<!--                    <option value="Хэтчбэк">Хэтчбэк</option>-->
+<!--                    <option value="Универсал">Универсал</option>-->
+<!--                </select>-->
+                    {{ buy_glass_form.car_body_type }}
+                <div class="wq-form__title wq-form__item">Год выпуска:</div>
+<!--                <input type="text" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ buy_glass_form.issue_year }}
+                <div class="wq-form__title wq-form__item">Выбор стекла:</div>
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Лобовое">Лобовое</option>-->
+<!--                    <option value="Боковое">Боковое</option>-->
+<!--                    <option value="Заднее">Заднее</option>-->
+<!--                </select>-->
+                    {{ buy_glass_form.glass_type }}
+                <div class="wq-form__title wq-form__item">Комплектация стекла:</div>
+
+                <div class="wq-form__item wq-form__checkbox-container">
+                    <div class="wq-form__checkbox-container__title">Ответ:</div>
+                    <div class="wq-form__checkboxes">
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-1">полный обогрев</label>
+<!--                            <input type="checkbox" id="ch-2-1" value="полный обогрев">-->
+                                {{ buy_glass_form.full_glass_heating }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-2">обогрев зоны дворников</label>
+<!--                            <input type="checkbox" id="ch-2-2" value="обогрев зоны дворников">-->
+                            {{ buy_glass_form.wiper_heating }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-3">датчик дождя</label>
+<!--                            <input type="checkbox" id="ch-2-3" value="датчик дождя">-->
+                            {{ buy_glass_form.rain_sensor }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-4">камера ассистент</label>
+<!--                            <input type="checkbox" id="ch-2-4" value="камера ассистент">-->
+                            {{ buy_glass_form.camera_assistant }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-5">окошко под vin</label>
+<!--                            <input type="checkbox" id="ch-2-5" value="окошко под vin">-->
+                            {{ buy_glass_form.vin_code_windows }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-6">проекция</label>
+<!--                            <input type="checkbox" id="ch-2-6" value="проекция">-->
+                            {{ buy_glass_form.projection }}
+                        </div>
+                        <div class="wq-form__checkbox">
+                            <label for="ch-2-7">не знаю</label>
+<!--                            <input type="checkbox" id="ch-2-7" value="не знаю">-->
+                            {{ buy_glass_form.i_dont_know }}
+                        </div>
+                    </div>
+                </div>
+                <div class="wq-form__title wq-form__item">Выберите удобное время и дату:</div>
+<!--                <input type="datetime-local" class="wq-form__input wq-form__item" placeholder="Ответ">-->
+                    {{ buy_glass_form.convenient_datetime }}
+                <div class="wq-form__title wq-form__item">Ваши контактные данные:</div>
+<!--                <textarea type="datetime-local" class="wq-form__input wq-form__item" placeholder="имя и номер телефона"></textarea>-->
+                    {{ buy_glass_form.contacts }}
+                <div class="wq-form__title wq-form__item">Требуется установка?</div>
+                    {{ buy_glass_form.need_install }}
+<!--                <select class="wq-form__input wq-form__item" placeholder="Ответ">-->
+<!--                    <option value="Да">Да</option>-->
+<!--                    <option value="Нет">Нет</option>-->
+<!--                </select>-->
+                <button type="submit" class="wq-form__item wq-form__submit">Записаться</button>
+            </form>
+            <div class="wq-form__info">Не нашли информацию? Остались вопросы? Свяжитесь с нами</div>
+        </div>
+        <div class="wq-form__footer">
+            <div class="wq-form__phone">+7(953)465-53-63</div>
+            <a data-href="+79534655363" onclick="event.preventDefault(); location.href = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'whatsapp://send?phone=' : 'https://web.whatsapp.com/send/?phone=') + this.getAttribute('data-href').replace(/\D/g, '')" class="wq-form__messanger"><img src="/static/img/icon.png" alt="">WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.wq-form__checkbox-container__title').forEach(item => {
+        item.addEventListener('click', () => {
+
+            item.nextElementSibling.style.display = getComputedStyle(item.nextElementSibling)['display'] === 'none' ? 'block' : 'none'
+
+        })
+    })
+
+    document.querySelectorAll('.wq-form__choose-block__item').forEach((item, index) => {
+        item.addEventListener('click', () => {
+
+            document.querySelector(`[data-wq-opened="${index}"]`).classList.add('opened')
+
+        })
+
+    })
+
+    document.querySelectorAll('.wq-popup').forEach(item => {
+
+        if(item.hasAttribute('data-wq-opened')){
+
+            item.addEventListener('click', e => {
+
+                if(e.target === item){
+
+                    item.classList.remove('opened')
+
+                }
+
+            })
+
+        }
+
+    })
+</script>
+
+
+
+</body>
+</html>

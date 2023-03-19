@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <!-- Load the Telegram Library -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Успешная запись</title>
+    <style>
+        body {
+            background-color: #000;
+        }
+        .checkmark {
+            display: block;
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #872D1B;
+        }
+        .checkmark::before {
+            margin: 0 auto;
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 198px;
+            width: 22px;
+            height: 40px;
+            transform: rotate(45deg);
+            border-bottom: 3px solid #fff;
+            border-right: 3px solid #fff;
+        }
+        .success-text {
+            color: #fff;
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .second-text {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .elegant-hr {
+          height: 1px;
+          background-color: #ccc;
+          border: none;
+          position: relative;
+          animation: move 3s;
+        }
+        @keyframes move {
+          from {
+            left: 100%;
+          }
+          to {
+            left: 0;
+          }
+        }
+        .hr-racing {
+          position: relative;
+          height: 30px;
+          overflow: hidden;
+        }
+        .hr-racing b {
+          position: absolute;
+          top: -10px;
+          left: -30px;
+          height: 50px;
+          animation: drive 5s infinite linear;
+        }
+        @keyframes drive {
+          from {
+            left: 100%;
+          }
+          to {
+            left: 0;
+          }
+        }
+    </style>
+</head>
+<body>
+<!--	<div class="checkmark">-->
+<!--		<i class="checkmark-icon bi bi-check-circle-fill"></i>-->
+<!--	</div>-->
+	<div class="success-text">🖋🗓Вы успешно записались</div>
+    <br>
+    <hr class="elegant-hr">
+    <br>
+	<div class="second-text">
+        🔹{{ car_brand }}<br>
+        🔹{{ convenient_datetime }}<br>
+        🔹{{ contacts }}<br>
+        🔹Услуга: <u>{{ service_type }}</u><br>
+        <p>🏁Теперь можете закрыть это окно</p>
+    </div>
+    <div class="hr-racing">
+        <b>🏎</b>
+    </div>
+</body>
+</html>
